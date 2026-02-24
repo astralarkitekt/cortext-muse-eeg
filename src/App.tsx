@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Monitor } from './pages/Monitor';
+import { Neuro } from './pages/Neuro';
 import { Analyze } from './pages/Analyze';
 
-type Tab = 'monitor' | 'analyze';
+type Tab = 'monitor' | 'neuro' | 'analyze';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('monitor');
@@ -21,6 +22,12 @@ export function App() {
             onClick={() => setActiveTab('monitor')}
           >
             Monitor
+          </button>
+          <button
+            className={`tab-btn${activeTab === 'neuro' ? ' active' : ''}`}
+            onClick={() => setActiveTab('neuro')}
+          >
+            Neuro
           </button>
           <button
             className={`tab-btn${activeTab === 'analyze' ? ' active' : ''}`}
@@ -45,7 +52,9 @@ export function App() {
         </div>
       </header>
 
-      {activeTab === 'monitor' ? <Monitor /> : <Analyze />}
+      {activeTab === 'monitor' && <Monitor />}
+      {activeTab === 'neuro' && <Neuro />}
+      {activeTab === 'analyze' && <Analyze />}
     </div>
   );
 }

@@ -20,6 +20,23 @@ const CHANNEL_COLORS = ['#818cf8', '#22d3ee', '#34d399', '#fbbf24'];
 
 const BAND_NAMES: (keyof BandPowers)[] = ['delta', 'theta', 'alpha', 'beta', 'gamma'];
 
+// ─── Band update subscribers (for NEURO tab) ────────────────────────────────
+
+type BandUpdateCallback = (bands: BandPowers, perChannel: BandPowers[]) => void;
+const bandUpdateListeners: BandUpdateCallback[] = [];
+
+export function onBandUpdate(cb: BandUpdateCallback): () => void {
+  bandUpdateListeners.push(cb);
+  return () => {
+    const idx = bandUpdateListeners.indexOf(cb);
+    if (idx >= 0) bandUpdateListeners.splice(idx, 1);
+  };
+}
+
+export function getIsStreaming(): boolean { return isStreaming; }
+export function getSmoothedBands(): BandPowers { return { ...smoothedBands }; }
+export function getChannelBuffers() { return channelBuffers; }
+
 // ─── State ───────────────────────────────────────────────────────────────────
 
 let museClient: MuseClient | null = null;
@@ -51,11 +68,13 @@ let ctx: CanvasRenderingContext2D;
 let animFrameId: number | null = null;
 let resizeHandler: (() => void) | null = null;
 let outsideClickHandler: ((e: MouseEvent) => void) | null = null;
+let connectListenerBound = false; // prevent duplicate connect button listeners
 
 // ─── Logging ─────────────────────────────────────────────────────────────────
 
 function log(msg: string, level: 'info' | 'success' | 'error' | 'warn' = 'info') {
-  const logContent = $('log-content');
+  const logContent = document.getElementById('log-content');
+  if (!logContent) return;
   const ts = new Date().toLocaleTimeString('en-US', { hour12: false });
   const div = document.createElement('div');
   div.className = level;
@@ -88,7 +107,7 @@ async function connect() {
 
     isStreaming = true;
     sessionStart = Date.now();
-    $('idle-overlay').classList.add('hidden');
+    document.getElementById('idle-overlay')?.classList.add('hidden');
     updateConnectionUI();
 
     museClient.eegReadings.subscribe((reading) => {
@@ -104,7 +123,8 @@ async function connect() {
       }
     });
 
-    ($('export-btn') as HTMLButtonElement).disabled = false;
+    const exportBtn = document.getElementById('export-btn') as HTMLButtonElement | null;
+    if (exportBtn) exportBtn.disabled = false;
 
     museClient.telemetryData.subscribe((telemetry) => {
       log(`Battery: ${telemetry.batteryLevel.toFixed(1)}% | Temp: ${telemetry.temperature}°C`, 'info');
@@ -133,16 +153,18 @@ function disconnect() {
   currentBands = { delta: 0, theta: 0, alpha: 0, beta: 0, gamma: 0 };
   smoothedBands = { delta: 0, theta: 0, alpha: 0, beta: 0, gamma: 0 };
   maxBandPower = 0.001;
-  $('idle-overlay').classList.remove('hidden');
-  ($('export-btn') as HTMLButtonElement).disabled = true;
+  document.getElementById('idle-overlay')?.classList.remove('hidden');
+  const exportBtn = document.getElementById('export-btn') as HTMLButtonElement | null;
+  if (exportBtn) exportBtn.disabled = true;
   updateConnectionUI();
   log('Disconnected.', 'warn');
 }
 
 function updateConnectionUI() {
-  const statusDot = $('status-dot');
-  const statusText = $('status-text');
-  const connectBtn = $('connect-btn') as HTMLButtonElement;
+  const statusDot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  const connectBtn = document.getElementById('connect-btn') as HTMLButtonElement | null;
+  if (!statusDot || !statusText || !connectBtn) return;
   statusDot.className = 'status-dot' + (isStreaming ? ' streaming' : isConnected ? ' connected' : '');
   statusText.textContent = isStreaming ? 'streaming' : isConnected ? 'connected' : 'disconnected';
   connectBtn.textContent = isConnected ? 'Disconnect' : 'Connect';
@@ -179,12 +201,18 @@ function updateBandPowers() {
 
   updateBandUI();
   updateMetrics();
+
+  // Notify subscribers (NEURO tab, etc.)
+  for (const cb of bandUpdateListeners) {
+    try { cb({ ...smoothedBands }, allBands); } catch { /* ignore */ }
+  }
 }
 
 function updateBandUI() {
   for (const name of BAND_NAMES) {
-    const bar = $(`band-${name}`) as HTMLDivElement;
-    const val = $(`val-${name}`);
+    const bar = document.getElementById(`band-${name}`) as HTMLDivElement | null;
+    const val = document.getElementById(`val-${name}`);
+    if (!bar || !val) return;
     const pct = Math.min(100, (smoothedBands[name] / maxBandPower) * 100);
     bar.style.width = `${pct}%`;
     const db = smoothedBands[name] > 0
@@ -195,21 +223,27 @@ function updateBandUI() {
 }
 
 function updateMetrics() {
+  const elFocus = document.getElementById('metric-focus');
+  const elCalm = document.getElementById('metric-calm');
+  const elSamples = document.getElementById('metric-samples');
+  const elTime = document.getElementById('metric-time');
+  if (!elFocus || !elCalm || !elSamples || !elTime) return;
+
   const focusDenom = smoothedBands.alpha + smoothedBands.theta;
   const focus = focusDenom > 0 ? smoothedBands.beta / focusDenom : 0;
-  ($('metric-focus')).textContent = `${Math.min(99, Math.round(focus * 50))}`;
+  elFocus.textContent = `${Math.min(99, Math.round(focus * 50))}`;
 
   const calm = smoothedBands.beta > 0 ? smoothedBands.alpha / smoothedBands.beta : 0;
-  ($('metric-calm')).textContent = `${Math.min(99, Math.round(calm * 30))}`;
+  elCalm.textContent = `${Math.min(99, Math.round(calm * 30))}`;
 
   const sampleK = totalSamples > 1000 ? `${(totalSamples / 1000).toFixed(1)}k` : `${totalSamples}`;
-  ($('metric-samples')).textContent = sampleK;
+  elSamples.textContent = sampleK;
 
   if (sessionStart) {
     const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
     const min = Math.floor(elapsed / 60);
     const sec = elapsed % 60;
-    ($('metric-time')).textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+    elTime.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
   }
 }
 
@@ -295,6 +329,22 @@ function drawWaveforms() {
     ctx.globalAlpha = 1;
   }
 }
+
+// ─── Background band computation (runs even when Monitor tab is unmounted) ───
+
+let bgBandInterval: ReturnType<typeof setInterval> | null = null;
+
+function startBackgroundBandCompute() {
+  if (bgBandInterval) return;
+  bgBandInterval = setInterval(() => {
+    if (isStreaming && bandUpdateListeners.length > 0) {
+      updateBandPowers();
+    }
+  }, FFT_UPDATE_INTERVAL);
+}
+
+// Start immediately — always available for subscribers
+startBackgroundBandCompute();
 
 // ─── Animation Loop ──────────────────────────────────────────────────────────
 
@@ -474,7 +524,8 @@ export function initMonitor() {
   if (!navigator.bluetooth) {
     log('Web Bluetooth not supported in this browser!', 'error');
     log('Please use Chrome or Edge on desktop.', 'error');
-    ($('connect-btn') as HTMLButtonElement).disabled = true;
+    const connectBtn = document.getElementById('connect-btn') as HTMLButtonElement | null;
+    if (connectBtn) connectBtn.disabled = true;
     return;
   }
 
@@ -482,9 +533,16 @@ export function initMonitor() {
   resizeHandler = resizeCanvas;
   window.addEventListener('resize', resizeHandler);
 
-  $('connect-btn').addEventListener('click', connect);
+  // Connect button lives in the App header — only bind once ever
+  if (!connectListenerBound) {
+    const connectBtn = document.getElementById('connect-btn');
+    if (connectBtn) {
+      connectBtn.addEventListener('click', connect);
+      connectListenerBound = true;
+    }
+  }
 
-  // Export controls
+  // Export controls (these are inside Monitor's DOM, re-bound each mount)
   const exportBtn = $('export-btn');
   const exportDropdown = $('export-dropdown');
   exportBtn.addEventListener('click', toggleExportDropdown);
@@ -513,7 +571,15 @@ export function initMonitor() {
     input.value = '';
   });
 
-  log('Web Bluetooth API detected. Ready to connect.', 'success');
+  // Sync UI to current connection state (handles re-mount while connected)
+  if (isStreaming) {
+    $('idle-overlay').classList.add('hidden');
+    (exportBtn as HTMLButtonElement).disabled = false;
+    log('Resumed monitoring — EEG stream active.', 'success');
+  } else if (!isConnected) {
+    log('Web Bluetooth API detected. Ready to connect.', 'success');
+  }
+  updateConnectionUI();
 
   animFrameId = requestAnimationFrame(animate);
 }
