@@ -198,9 +198,12 @@ function drawReactor(
   const h = rect.height;
   const cx = w / 2;
   const cy = h / 2;
-  const maxR = Math.min(cx, cy) - 20;
+  const maxR = Math.max(0, Math.min(cx, cy) - 20);
 
   ctx.clearRect(0, 0, w, h);
+
+  // Skip drawing if canvas is not visible (zero size)
+  if (maxR <= 0) return;
 
   if (state === 'idle') {
     // Draw idle state — dim concentric rings

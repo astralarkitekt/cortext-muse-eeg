@@ -1544,6 +1544,1017 @@ body {
   color: var(--text-primary);
 }
 
+/* ─── BLINDSIGHT ──────────────────────────────────────────────────────── */
+
+.blind-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Control Bar */
+.blind-control-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.blind-controls-left {
+  display: flex;
+  gap: 8px;
+}
+
+.blind-start-btn,
+.blind-finish-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blind-start-btn {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.blind-start-btn:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.blind-start-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.blind-finish-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.blind-finish-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.blind-status {
+  flex: 1;
+}
+
+.blind-status-text {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.blind-status-text.warn { color: var(--accent-beta); }
+.blind-status-text.ready { color: var(--text-secondary); }
+.blind-status-text.calibrating { color: var(--accent-theta); }
+.blind-status-text.active { color: var(--accent-alpha); }
+.blind-status-text.painting { color: #f472b6; }
+.blind-status-text.revealing { color: var(--accent-theta); }
+.blind-status-text.complete { color: var(--text-dim); }
+
+.blind-metrics {
+  display: flex;
+  gap: 16px;
+}
+
+.blind-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.blind-metric-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+.blind-metric-value {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.blind-metric.eye-closed .blind-metric-value {
+  color: #f472b6;
+}
+
+.blind-metric.eye-open .blind-metric-value {
+  color: var(--accent-alpha);
+}
+
+/* Session Actions Bar */
+.blind-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(16, 185, 129, 0.04);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  border-radius: 10px;
+  margin-bottom: 4px;
+  animation: neuro-modal-fadein 0.3s ease-out;
+}
+
+.blind-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+}
+
+.blind-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.blind-action-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.blind-action-replay {
+  background: rgba(34, 211, 238, 0.08);
+  border-color: rgba(34, 211, 238, 0.2);
+  color: #22d3ee;
+}
+
+.blind-action-replay:hover:not(:disabled) {
+  background: rgba(34, 211, 238, 0.16);
+}
+
+.blind-action-gif {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.blind-action-gif:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.16);
+}
+
+.blind-action-gallery {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.blind-action-gallery:hover {
+  background: rgba(16, 185, 129, 0.16);
+}
+
+.blind-action-png {
+  background: rgba(129, 140, 248, 0.08);
+  border-color: rgba(129, 140, 248, 0.2);
+  color: #818cf8;
+}
+
+.blind-action-png:hover {
+  background: rgba(129, 140, 248, 0.16);
+}
+
+.blind-action-stop {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.blind-action-stop:hover {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+/* Canvas Area */
+.blind-canvas-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 360px;
+  overflow: hidden;
+  padding: 0;
+  background: #0a0a0f;
+}
+
+.blind-paint-canvas,
+.blind-overlay-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.blind-overlay-canvas {
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Idle Overlay */
+.blind-idle-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(10, 10, 15, 0.9);
+}
+
+.blind-idle-icon {
+  font-size: 48px;
+  color: #555570;
+  line-height: 1;
+}
+
+.blind-idle-title {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--text-dim);
+}
+
+.blind-idle-subtitle {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.blind-idle-hint {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  opacity: 0.6;
+  max-width: 360px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Calibration Overlay */
+.blind-calibration-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(10, 10, 15, 0.95);
+}
+
+.blind-calib-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.blind-calib-ring svg {
+  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.3));
+}
+
+.blind-calib-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blind-calib-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+}
+
+.blind-calib-text {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.blind-calib-timer {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: #22d3ee;
+}
+
+/* Reveal progress bar */
+.blind-reveal-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.blind-reveal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22d3ee, #10b981);
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+}
+
+/* Bottom Row */
+.blind-bottom-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+/* Config Panel */
+.blind-config-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 18px;
+}
+
+.blind-config-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.blind-config-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.blind-config-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.blind-config-select {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.blind-config-select option {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Gesture Panel */
+.blind-gesture-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 18px;
+  max-height: 220px;
+}
+
+.blind-gesture-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blind-gesture-total {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.blind-gesture-log {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 60px;
+}
+
+.blind-gesture-log::-webkit-scrollbar { width: 4px; }
+.blind-gesture-log::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.blind-gesture-empty {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 16px 0;
+  opacity: 0.6;
+}
+
+.blind-gesture-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+.blind-gesture-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.blind-gesture-idx {
+  color: var(--text-dim);
+  width: 24px;
+}
+
+.blind-gesture-dur {
+  color: var(--text-secondary);
+  width: 36px;
+}
+
+.blind-gesture-pts {
+  color: var(--text-dim);
+  width: 48px;
+}
+
+.blind-gesture-band {
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* Brush Panel */
+.blind-brush-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 18px;
+}
+
+.blind-brush-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.blind-brush-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.blind-brush-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.blind-brush-value {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.blind-brush-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* Channel Mapping Reference Bar */
+.blind-mapping-ref {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.blind-mapping-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.blind-mapping-ch {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.blind-mapping-arrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.blind-mapping-param {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+.blind-mapping-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* Blindsight Session Complete Modal */
+.blind-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 4, 8, 0.85);
+  backdrop-filter: blur(12px);
+  animation: neuro-modal-fadein 0.8s ease-out;
+}
+
+.blind-modal {
+  position: relative;
+  width: 580px;
+  max-width: 94vw;
+}
+
+.blind-modal-content {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.08),
+    0 24px 80px rgba(0, 0, 0, 0.6);
+  animation: neuro-modal-slidein 0.6s ease-out 0.15s both;
+}
+
+.blind-modal-icon {
+  font-size: 40px;
+  color: #10b981;
+  text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+  line-height: 1;
+}
+
+.blind-modal-title {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.blind-modal-subtitle {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+  max-width: 340px;
+}
+
+.blind-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.blind-modal-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.blind-modal-stat-value {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.blind-modal-stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Gesture duration bars in modal */
+.blind-modal-gestures {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 100%;
+  height: 48px;
+  padding: 4px 0;
+}
+
+.blind-modal-gesture-bar {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  min-width: 4px;
+  max-width: 16px;
+}
+
+.blind-modal-gesture-fill {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  opacity: 0.8;
+  transition: height 0.3s ease-out;
+}
+
+.blind-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+.blind-modal-save {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(34, 211, 238, 0.15));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  color: #10b981;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blind-modal-save:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(34, 211, 238, 0.25));
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+.blind-modal-dismiss {
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blind-modal-dismiss:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+/* ─── Replay Button (modal) ──────────────────────────────────────────── */
+
+.blind-modal-replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #22d3ee 0%, #818cf8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.blind-modal-replay:hover {
+  filter: brightness(1.15);
+  transform: scale(1.03);
+}
+
+/* ─── Replay Overlay ─────────────────────────────────────────────────── */
+
+.blind-replay-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(6px);
+  animation: neuro-modal-fadein 0.4s ease-out;
+}
+
+.blind-replay-label {
+  color: #22d3ee;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.blind-replay-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.blind-replay-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22d3ee, #818cf8);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.blind-replay-skip {
+  padding: 4px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blind-replay-skip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+/* ─── GIF Export ─────────────────────────────────────────────────────── */
+
+.blind-modal-gif {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.blind-modal-gif:hover {
+  filter: brightness(1.15);
+  transform: scale(1.03);
+}
+
+.blind-gif-overlay {
+  border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+.blind-gif-fill {
+  background: linear-gradient(90deg, #f59e0b, #ef4444) !important;
+}
+
+@keyframes blind-gif-spin {
+  to { transform: rotate(360deg); }
+}
+
+.blind-gif-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(245, 158, 11, 0.3);
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: blind-gif-spin 0.8s linear infinite;
+  margin-right: 6px;
+}
+
+/* ─── Sound Toggle ───────────────────────────────────────────────────── */
+
+.blind-sound-toggle {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 64px;
+}
+
+.blind-sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.blind-sound-toggle.active {
+  background: rgba(34, 211, 238, 0.12);
+  border-color: rgba(34, 211, 238, 0.3);
+  color: #22d3ee;
+}
+
+/* ─── Gallery Panel ──────────────────────────────────────────────────── */
+
+.blind-gallery-panel {
+  margin-top: 8px;
+}
+
+.blind-gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.blind-gallery-count {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+}
+
+.blind-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.blind-gallery-thumb {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s;
+  aspect-ratio: 4 / 3;
+}
+
+.blind-gallery-thumb:hover {
+  border-color: rgba(34, 211, 238, 0.3);
+  transform: scale(1.04);
+}
+
+.blind-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.blind-gallery-thumb-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-family: var(--mono);
+  color: var(--text-secondary);
+}
+
+/* ─── Gallery Viewer Modal ───────────────────────────────────────────── */
+
+.blind-gallery-viewer {
+  max-width: 720px;
+}
+
+.blind-gallery-viewer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.blind-gallery-viewer-img {
+  max-width: 100%;
+  max-height: 50vh;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.blind-gallery-viewer-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-secondary);
+}
+
+.blind-gallery-viewer-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.blind-gallery-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 8px;
+  color: #ef4444;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.blind-gallery-delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .neuro-mapping-grid {
