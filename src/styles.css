@@ -683,6 +683,7 @@ body {
   outline: none;
   transition: border-color 0.2s;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .settle-input::-webkit-inner-spin-button,
