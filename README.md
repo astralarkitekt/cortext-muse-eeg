@@ -4,6 +4,8 @@ Real-time EEG visualization, neurofeedback audio synthesis, session analytics, a
 
 No backend. No subscriptions. No SDK. Just `npm run dev` and strap on your headband.
 
+### **[Live Demo →](https://tools.astralarchitecture.com/cortex/)**
+
 ---
 
 ## What It Does
@@ -55,6 +57,8 @@ Under the hood: 256 Hz sample rate, 4-second rolling buffers (1024 samples per c
 
 ### Neuro — Neurofeedback Audio Synthesis
 
+> **[Watch the demo →](https://www.youtube.com/watch?v=GVseUIKrC6c)**
+
 NEURO-ARIA maps your brain state to a layered Tone.js soundscape in real time. Seven synthesis layers:
 
 | Layer | Sound | EEG Mapping |
@@ -81,6 +85,8 @@ Import an exported CSV and get offline analysis with Recharts:
 Uses the same FFT pipeline as the live monitor to reprocess recorded sessions.
 
 ### Blindsight — Brain-Painting
+
+> **[Watch the demo →](https://www.youtube.com/watch?v=J-T4iSsOnmE)**
 
 Close your eyes. Your brain paints a picture you've never seen. Open your eyes. It's revealed.
 
